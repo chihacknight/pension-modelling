@@ -1,6 +1,6 @@
 library(shiny)
 library(ggplot2)
-
+library(shinyBS) # Additional Bootstrap Controls
 start_year = 2014
 
 ui <- shinyUI(fluidPage(
@@ -14,8 +14,26 @@ ui <- shinyUI(fluidPage(
       #sliderInput('ror',"Asset Rate of Return",0,10,5,step=0.5),
       sliderInput('tfr',"Target Funding Ratio",0,120,100,step=5),
       sliderInput('amort',"Amortization Period",0,60,30,step=5),
+      bsPopover(id = "amort", title = "How long to pay off the shortfall?", 
+                content = paste("Use this slider to set a period the state will pay",
+                                " off the shortfall. The longer you take the more interest you pay"),
+                                placement = "right", trigger = "hover"),
+      
+      
       sliderInput('mort',"Mortality Adjustment",0, 10, 0),
-      sliderInput('retire',"Retirement Delay",0, 10, 0)),
+      bsPopover(id = "mort", title = "Extend life expectency", 
+                content = paste("We used the same mortaility table assumptions from the ",
+                                "acturial report. This can shift table to reflect a ",
+                                "longer life expectency"),
+                placement = "right", trigger = "hover"),
+    
+      
+      sliderInput('retire',"Retirement Delay",0, 10, 0),
+      bsPopover(id = "retire", title = "Delay the average retirement age", 
+                content = paste("We used average retirement patterns from the actuarial reports, ",
+                                "this can shift it later"),
+                placement = "right", trigger = "hover")),
+    
     tabPanel("Inputs",br(),
       sliderInput('ben',"Benefit Growth Rate", 0, 10, 3,step=0.5),
       sliderInput('inf',"Inflation Rate",0,10,3,step=0.5),
