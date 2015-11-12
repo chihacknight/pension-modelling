@@ -47,11 +47,12 @@ ui <- shinyUI(fluidPage(
   mainPanel(
     tabsetPanel(
       tabPanel("Funding",br(),hr(),
-               h3(textOutput('pensionAssets'),align="left"),
-               h3(textOutput('pensionLiabilities'),align="left"),
-               h3(textOutput('fundingRatio'),align="left"),
-               h3(textOutput('contributionTarget'),align="left"),
-               h3(textOutput('requiredAnnualContribution'),align="left"),
+               plotOutput('assetliabilityPlot', width = "150px", height = "150px"),
+               textOutput('pensionAssets'),align="left",
+               textOutput('pensionLiabilities'),align="left",
+               textOutput('fundingRatio'),align="left",
+               textOutput('contributionTarget'),align="left",
+               textOutput('requiredAnnualContribution'),align="left",
                hr(),
                h3("Annual Fund Outflows",align='center'),
                br(),

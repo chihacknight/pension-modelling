@@ -52,6 +52,7 @@ server <- shinyServer(function(input,output,clientData,session) {
   
   # Fund outflows, by liability type
   output$flowsPlot <- renderPlot({source('flowsPlot.R',local=TRUE)})
+  output$assetliabilityPlot <- renderPlot({source('assetLiabilityPlot.R', local=TRUE)} )
   
   # Plot the distribution of actives for each period
   output$count_plot <- renderPlot({source('count_plot.R',local=TRUE)})
