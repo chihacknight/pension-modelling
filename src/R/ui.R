@@ -46,9 +46,17 @@ ui <- shinyUI(fluidPage(
   
   mainPanel(
     tabsetPanel(
-      tabPanel("Funding",br(),hr(),h3(textOutput('pensionAssets'),align="left"),h3(textOutput('fundingRatio'),align="left")
-               ,h3(textOutput('contributionTarget'),align="left"),h3(textOutput('requiredAnnualContribution'),align="left")
-               ,hr(),h3("Annual Fund Outflows",align='center'),br(),plotOutput('flowsPlot')),
+      tabPanel("Funding",br(),hr(),
+               h3(textOutput('pensionAssets'),align="left"),
+               h3(textOutput('pensionLiabilities'),align="left"),
+               h3(textOutput('fundingRatio'),align="left"),
+               h3(textOutput('contributionTarget'),align="left"),
+               h3(textOutput('requiredAnnualContribution'),align="left"),
+               hr(),
+               h3("Annual Fund Outflows",align='center'),
+               br(),
+               plotOutput('flowsPlot')),
+      
       tabPanel("Valuation Details",br(),h3("Results of Actuarial Valuation")
                ,br(),tableOutput('details'),align="center"),
       tabPanel("Population",br(),

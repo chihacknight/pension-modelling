@@ -40,6 +40,16 @@ server <- shinyServer(function(input,output,clientData,session) {
   actives_survivor_liability <- reactive({calculate_annuitant_liability(list(initial_actives_forecast()[[4]],initial_actives_forecast()[[5]]),input$disc,60)})
   inactives_survivor_liability <- reactive({calculate_annuitant_liability(list(initial_inactives_forecast()[[4]],initial_inactives_forecast()[[5]]),input$disc,60)})
   
+  totalLiability <- reactive({sum(
+    actives_liability()[[1]] + 
+      actives_survivor_liability()[[1]] + 
+      annuitant_liability()[[1]] + 
+      new_survivor_liability()[[1]] + 
+      inactives_liability()[[1]] + 
+      inactives_survivor_liability()[[1]] + 
+      survivor_liability()[[1]])
+  })
+  
   # Fund outflows, by liability type
   output$flowsPlot <- renderPlot({source('flowsPlot.R',local=TRUE)})
   
@@ -47,8 +57,7 @@ server <- shinyServer(function(input,output,clientData,session) {
   output$count_plot <- renderPlot({source('count_plot.R',local=TRUE)})
   
   # Calculate the funding ratio given PV liabilities and assets
-  fundingRatio <- reactive({100 * starting_wealth[1] / (sum(actives_liability()[[1]] + actives_survivor_liability()[[1]] + annuitant_liability()[[1]] + new_survivor_liability()[[1]] + 
-                                                              inactives_liability()[[1]] + inactives_survivor_liability()[[1]] + survivor_liability()[[1]]))})
+  fundingRatio <- reactive({100 * starting_wealth[1] / totalLiability()})
   
   # Output the current funded ratio
   output$fundingRatio <- renderText({paste("Funded Ratio: ",round(fundingRatio(),2),"%",sep="")})
@@ -75,6 +84,7 @@ server <- shinyServer(function(input,output,clientData,session) {
   
   # Actuarial value of pension assets
   output$pensionAssets <- renderText({paste("Pension Assets: $",formatC(starting_wealth[1],format="f",digits=0,big.mark=","),sep="")})
+  output$pensionLiabilities <- renderText({paste("Pension Liabilities: $",formatC(totalLiability(),format="f",digits=0,big.mark=","),sep="")})
   
   # Output valuation details
   output$details <- renderTable({
