@@ -50,7 +50,6 @@ ui <- shinyUI(fluidPage(
     tabsetPanel(
       tabPanel("Funding",br(),hr(),
                plotOutput('assetliabilityPlot', width = "150px", height = "150px"),
-<<<<<<< HEAD
                textOutput('pensionAssets'),
                textOutput('pensionLiabilities'),
                textOutput('fundingRatio'),
@@ -61,18 +60,6 @@ ui <- shinyUI(fluidPage(
                plotOutput('amortPlot'),
                h3("Benefit Details",align='center'),br(),
                plotOutput('flowsPlot')),
-=======
-               textOutput('pensionAssets'),align="left",
-               textOutput('pensionLiabilities'),align="left",
-               textOutput('fundingRatio'),align="left",
-               textOutput('contributionTarget'),align="left",
-               textOutput('requiredAnnualContribution'),align="left",
-               hr(),
-               h3("Annual Fund Outflows",align='center'),
-               br(),
-               plotOutput('flowsPlot')),
-      
->>>>>>> 19babf268f033629473af9c0eeca18731796a5fb
       tabPanel("Valuation Details",br(),h3("Results of Actuarial Valuation")
                ,br(),tableOutput('details'),align="center"),
       tabPanel("Population",br(),
