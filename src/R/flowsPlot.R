@@ -1,5 +1,8 @@
 Year = rep(seq(2015,2074),4)
-Flows = c(colSums(actives_liability()[[2]]), colSums(inactives_liability()[[2]]), colSums(survivor_liability()[[2]]), colSums(annuitant_liability()[[2]]) + colSums(new_survivor_liability()[[2]])) / 1000000
+Flows = c(colSums(actives_liability()[[2]]) + colSums(actives_survivor_liability()[[2]]), 
+          colSums(inactives_liability()[[2]]) + colSums(inactives_survivor_liability()[[2]]), 
+          colSums(survivor_liability()[[2]]), 
+          colSums(annuitant_liability()[[2]]) + colSums(new_survivor_liability()[[2]])) / 1000000
 Type = c(rep("Actives",60),rep("Inactives",60),rep("Survivors",60),rep("Annuitants",60))
 
 df = data.frame(Year,Flows,Type)

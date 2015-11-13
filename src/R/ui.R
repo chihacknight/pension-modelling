@@ -12,8 +12,10 @@ ui <- shinyUI(fluidPage(
     tabPanel("Shocks",br(),
       sliderInput('disc','Discount Rate',0,10,5,step=0.5),
       #sliderInput('ror',"Asset Rate of Return",0,10,5,step=0.5),
+      #sliderInput('cof',"Cost of Funds",0,10,5,step=0.5),
       sliderInput('tfr',"Target Funding Ratio",0,120,100,step=5),
       sliderInput('amort',"Amortization Period",0,60,30,step=5),
+      sliderInput('amortdelay',"Amortization Delay",0,10,0,step=1),
       bsPopover(id = "amort", title = "How long to pay off the shortfall?", 
                 content = paste("Use this slider to set a period the state will pay",
                                 " off the shortfall. The longer you take the more interest you pay"),
@@ -46,9 +48,18 @@ ui <- shinyUI(fluidPage(
   
   mainPanel(
     tabsetPanel(
-      tabPanel("Funding",br(),hr(),h3(textOutput('pensionAssets'),align="left"),h3(textOutput('fundingRatio'),align="left")
-               ,h3(textOutput('contributionTarget'),align="left"),h3(textOutput('requiredAnnualContribution'),align="left")
-               ,hr(),h3("Annual Fund Outflows",align='center'),br(),plotOutput('flowsPlot')),
+      tabPanel("Funding",br(),hr(),
+               plotOutput('assetliabilityPlot', width = "150px", height = "150px"),
+               textOutput('pensionAssets'),
+               textOutput('pensionLiabilities'),
+               textOutput('fundingRatio'),
+               textOutput('contributionTarget'),
+               textOutput('requiredAnnualContribution'),
+               hr(),
+               h3("Annual Fund Flows",align='center'),br(),
+               plotOutput('amortPlot'),
+               h3("Benefit Details",align='center'),br(),
+               plotOutput('flowsPlot')),
       tabPanel("Valuation Details",br(),h3("Results of Actuarial Valuation")
                ,br(),tableOutput('details'),align="center"),
       tabPanel("Population",br(),

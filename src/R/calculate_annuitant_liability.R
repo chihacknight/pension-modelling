@@ -9,10 +9,8 @@ calculate_annuitant_liability <- function(beneficiary_forecast,ror,npers) {
   
   outflows = annuitants * avg_benefits_forecast
   
-  for (n in 2:npers) {
-    #outflow = annuitants[,n] * avg_benefits_forecast[,n]
-    #outflows = c(outflows,outflow)
-    pv_outflows = c(pv_outflows,outflows[,n] / (1+ror/100)^(n-1))
+  for (n in 1:npers) {
+    pv_outflows = c(pv_outflows,outflows[,n] / (1+ror/100)^(n))
   }
   
   return(list(pv_outflows,outflows))

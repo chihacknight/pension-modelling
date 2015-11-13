@@ -42,6 +42,10 @@ server <- shinyServer(function(input,output,clientData,session) {
   
   # Fund outflows, by liability type
   output$flowsPlot <- renderPlot({source('flowsPlot.R',local=TRUE)})
+  output$assetliabilityPlot <- renderPlot({source('assetLiabilityPlot.R', local=TRUE)} )
+  
+  # Fund wealth over time
+  output$amortPlot <- renderPlot({source('amortPlot.R',local=TRUE)})
   
   # Plot the distribution of actives for each period
   output$count_plot <- renderPlot({source('count_plot.R',local=TRUE)})
@@ -53,28 +57,44 @@ server <- shinyServer(function(input,output,clientData,session) {
   # Output the current funded ratio
   output$fundingRatio <- renderText({paste("Funded Ratio: ",round(fundingRatio(),2),"%",sep="")})
   
-  # Calculate contribution target based on the funding ratio
-  output$contributionTarget <- renderText({
-    contributions_needed = (input$tfr / fundingRatio() - 1) * starting_wealth[1]
-    if (contributions_needed < 0) contributions_needed = 0
-    paste("Asset Shortfall: $",formatC(contributions_needed,format="f",digits=0,big.mark=","),sep="")
+  totalLiability <- reactive({sum(
+    actives_liability()[[1]] + 
+      actives_survivor_liability()[[1]] + 
+      annuitant_liability()[[1]] + 
+      new_survivor_liability()[[1]] + 
+      inactives_liability()[[1]] + 
+      inactives_survivor_liability()[[1]] + 
+      survivor_liability()[[1]])
   })
   
-  # Amortize the asset shortfall given the discount rate
-  output$requiredAnnualContribution <- renderText({
+  # Calculate contribution target based on the funding ratio
+  requiredContributions <- reactive({
     contributions_needed = (input$tfr / fundingRatio() - 1) * starting_wealth[1]
     if (contributions_needed < 0) contributions_needed = 0
-    rate = input$disc/100
-    if (input$amort==0) {
-      level_pay = contributions_needed
-    } else {
-      level_pay = (rate + rate / ((1+rate)^(input$amort)-1))*contributions_needed
-    }
-    paste("Annual Payment: $",formatC(level_pay,format="f",digits=0,big.mark=","),sep="")
+    contributions_needed
   })
+  
+  # Output the contributions needed
+  output$contributionTarget <- renderText({paste("Asset Shortfall: $",formatC(requiredContributions(),format="f",digits=0,big.mark=","),sep="")})
+  
+  # Calculate level payment to amortize asset
+  levelPayment <- reactive({
+    rate = input$disc/100
+    shortfall = requiredContributions()*(1+rate)^(input$amortdelay)
+    if (input$amort==0) {
+      level_pay = shortfall
+    } else {
+      level_pay = (rate + rate / ((1+rate)^(input$amort)-1))*shortfall
+    }
+    level_pay
+  })
+  
+  # Output level payment amount
+  output$requiredAnnualContribution <- renderText({paste("Annual Payment: $",formatC(levelPayment(),format="f",digits=0,big.mark=","),sep="")})
   
   # Actuarial value of pension assets
   output$pensionAssets <- renderText({paste("Pension Assets: $",formatC(starting_wealth[1],format="f",digits=0,big.mark=","),sep="")})
+  output$pensionLiabilities <- renderText({paste("Pension Liabilities: $",formatC(totalLiability(),format="f",digits=0,big.mark=","),sep="")})
   
   # Output valuation details
   output$details <- renderTable({
