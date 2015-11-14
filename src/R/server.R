@@ -86,14 +86,20 @@ server <- shinyServer(function(input,output,clientData,session) {
   # Output the contributions needed
   output$contributionTarget <- renderText({paste("Asset Shortfall: $",formatC(requiredContributions(),format="f",digits=0,big.mark=","),sep="")})
   
-  # Calculate level payment to amortize asset
+  # Calculate level payment to amortize asset, include amortization delay
   levelPayment <- reactive({
     rate = input$disc/100
+    n = input$amort
     shortfall = requiredContributions()*(1+rate)^(input$amortdelay)
-    if (input$amort==0) {
+    
+    if (n==0) {
       level_pay = shortfall
-    } else {
-      level_pay = (rate + rate / ((1+rate)^(input$amort)-1))*shortfall
+    } 
+    else if (n > 0 & rate > 0) {
+      level_pay = (rate + rate / ((1+rate)^n-1))*shortfall
+    }
+    else if (n > 0 & rate==0) {
+      level_pay = shortfall / n
     }
     level_pay
   })
@@ -114,12 +120,15 @@ server <- shinyServer(function(input,output,clientData,session) {
   # Dynamic slider input
   output$timeSlider <- renderUI({sliderInput("in_period","Select Period",start_year,start_year+60-1,value=start_year,animate=TRUE)})
   
+  amortUAAL <- reactive({source('amortizeUAAL.R',local=TRUE)})
+  
   output$downloadData <- downloadHandler(
     filename = function() {"forecastdata.csv"},
     content = function(file) {
       datasetInput = switch(input$forecastData,"1" = initial_beneficiary_forecast()[[1]],"2" = initial_beneficiary_forecast()[[2]],
                             "3" = initial_survivor_forecast()[[1]],"4" = initial_survivor_forecast()[[2]],"5" = initial_actives_forecast()[[3]],"6" = initial_actives_forecast()[[1]],
-                            "7" = initial_actives_forecast()[[2]],"8" = initial_inactives_forecast()[[3]],"9" = initial_inactives_forecast()[[1]],"10" = initial_inactives_forecast()[[2]])
+                            "7" = initial_actives_forecast()[[2]],"8" = initial_inactives_forecast()[[3]],"9" = initial_inactives_forecast()[[1]],"10" = initial_inactives_forecast()[[2]],
+                            "11" = dcast(amortUAAL()$value,Year~Type,value.var="Flows"))
       write.csv(datasetInput,file)
     })
   

@@ -9,6 +9,8 @@ df = data.frame(Year,Flows,Type)
 
 stacked_absolute<-ggplot(df,aes(x=Year,y=Flows,fill=Type)) +
   geom_area(colour="black",size=.2,alpha=.8) + ylab("$MM") + scale_fill_brewer(palette='Set1') + 
-  theme(panel.background = element_rect(fill = "white"), plot.background = element_rect(fill='grey97'))
+  theme(panel.background = element_rect(fill = "white"), plot.background = element_rect(fill='grey97')) + 
+  ggtitle("Annual Benefit Payments") + theme(plot.title = element_text(lineheight=.8, face="bold", size=24,vjust=1),legend.position="bottom")
+
 
 print(stacked_absolute)
