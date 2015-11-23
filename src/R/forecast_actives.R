@@ -18,6 +18,7 @@ forecast_actives <- function(tier1_actives,tier2_actives,earned_benefits,benefit
   survivor_forecast = matrix(rep(rep(0,maxage),npers),nrow=maxage)
   survivor_benefits = matrix(rep(rep(0,maxage),npers),nrow=maxage)
   
+  # Do I need to apply mortality to the first period?
   for (t in 2:npers) {
     
     t1_mortality = tier1_forecast[,t-1]*(1-2/3*.85*mm(3+mortality_adj)-1/3*.7*fm(2+mortality_adj))

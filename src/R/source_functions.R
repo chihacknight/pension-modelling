@@ -14,7 +14,7 @@ source('forecast_survivors.R')
 # Compute mortality vectors
 source('mortality.R')
 # Compute funding ratio
-source('calculate_funding_ratio.R')
+# source('calculate_funding_ratio.R')
 
 # Not immediately needed, but may be useful later
 #source('male_mortality.R')
