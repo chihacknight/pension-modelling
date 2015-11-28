@@ -11,10 +11,8 @@ source('calculate_annuitant_liability.R')
 source('forecast_actives.R')
 source('forecast_beneficiaries.R')
 source('forecast_survivors.R')
-# Compute mortality vectors
+# Male / Female mortality vectors
 source('mortality.R')
-# Compute funding ratio
-# source('calculate_funding_ratio.R')
 
 # Not immediately needed, but may be useful later
 #source('male_mortality.R')
