@@ -1,10 +1,10 @@
 
 dat <- data.frame(
-  factor = factor(c("Assets","Liabilities","UAAL")),
+  factor = factor(c("Assets","Liabilities","Unfunded")),
   Amount = c(starting_wealth[1], totalLiability(),totalLiability()-starting_wealth[1]))
 
 stacked_absolute<-ggplot(data=dat, aes(x=factor, y=Amount, fill=factor)) +
-  geom_bar(stat="identity")+
+  geom_bar(stat="identity")+ scale_fill_brewer(palette='Dark2') + 
   scale_y_continuous(labels=function(x) x / 1e6, name="") +
   scale_x_discrete(name="") +
   theme(panel.background = element_rect(fill = "white"), plot.background = element_rect(fill='grey97'), legend.position="none") + 
