@@ -4,3 +4,4 @@ AuthorUrl: http://www.rstudio.com/
 License: GPL-3
 Tags: getting-started
 Type: Shiny
+Suggests: testthat
